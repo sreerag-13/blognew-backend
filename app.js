@@ -14,7 +14,32 @@ const generateHashedPassword=async(password)=>{
     return bcrypt.hash(password,salt)
 }
 
-app.post("/",(req,res)=>{
+app.post("/signin",(req,res)=>{
+let input=req.body
+blogmodel.find({"Email":req.body.Email}).then((response)=>{
+  if(response.length>0)
+    {
+       let dpassword=response[0].Password
+       console.log(dpassword)
+       bcrypt.compare(input.Password,dpassword,(error,IsMatch)=>{
+        if(IsMatch)
+            {
+                res.json({"status":"success","user_id":response[0]._id})
+            }
+            else{
+                res.json({"status":"incorrect password"})
+            }
+       })
+    }
+    else{
+        res.json({"status":"incorrect email"})
+    }
+
+}
+
+
+
+).catch()
 
 
 }
@@ -28,7 +53,7 @@ app.post("/sign",async(req,res)=>{
     let user=new blogmodel(input)
     console.log(user)
     user.save()
-    res.json({status:"success"})
+    res.json({"status":"success"})
 })
 
 app.listen("8080",()=>{
