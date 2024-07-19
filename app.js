@@ -49,9 +49,6 @@ blogmodel.find({"Email":req.body.Email}).then((response)=>{
 
 
 
-
-
-
 app.post("/sign",async(req,res)=>{
     let input=req.body
     let hashedpassword= await generateHashedPassword(input.Password)
