@@ -4,6 +4,7 @@ const cors=require("cors")
 const jwt=require("jsonwebtoken")
 const {blogmodel}=require("./models/blog")
 const bcrypt =require("bcryptjs")
+const postmodel = require("./models/post")
 let app=express()
 app.use(cors())
 app.use(express.json())
@@ -47,7 +48,21 @@ blogmodel.find({"Email":req.body.Email}).then((response)=>{
 }
 )
 
-
+app.post("/create",async(req,res)=>
+{
+    let input=req.body
+    let token=req.headers.token
+    jwt.verify(token,"blogApp",async(error,decoded)=>
+    {
+        if (decoded) {
+            let result=new postmodel(input)
+            await result.save()
+            res.json({"stutus":"stutus done"})
+        } else {
+            res.json({"stutus":"invalid auth"})
+        }
+    })
+})
 
 app.post("/sign",async(req,res)=>{
     let input=req.body
