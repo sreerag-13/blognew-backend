@@ -5,6 +5,6 @@ let schema=mongoose.Schema({
     "":{type:String,require:true},
     "Password":{type:String,require:true}
 })
-let postmodel=mongoose.model("blogs",schema)
+let blogmodel=mongoose.model("blogs",schema)
 
-module.exports={postmodel}
+module.exports={blogmodel}
