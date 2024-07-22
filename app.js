@@ -63,21 +63,57 @@ app.post("/create",async(req,res)=>
         }
     })
 })
-
+app.post("/viewall",(req,res)=>{
+    let token=req.headers.token
+    jwt.verify(token,"blogApp",(error,decoded)=>{
+        if (decoded && decoded.Email) {
+          
+            postmodel.find().then((items)=>{
+                res.json(items)
+            }).catch((error)=>{
+                res.json({"status":"error"})
+            })
+        } else {
+            res.json({"status":"invalid auther"})
+            
+        }
+    })
+})
+app.post("/viewmy",(req,res)=>{
+    let input=req.body
+    let token=req.headers.token
+    jwt.verify(token,"blogApp",(error,decoded)=>{
+        if (decoded && decoded.Email) {
+          
+            postmodel.find(input).then((items)=>{
+                res.json(items)
+            }).catch((error)=>{
+                res.json({"status":"error"})
+            })
+        } else {
+            res.json({"status":"invalid auther"})
+            
+        }
+    })
+})
 app.post("/sign",async(req,res)=>{
     let input=req.body
-    let hashedpassword= await generateHashedPassword(input.Password)
-    input.Password=hashedpassword
-    blogmodel.find({Email:input.Email}).then((items)=>{
+    let hashedpassword=bcrypt.hashSync(req.body.Password,10)
+    console.log(hashedpassword)
+    req.body.Password=hashedpassword
+   blogmodel.find({Email:req.body.Email}).then((items)=>{
+        console.log(items)
      if(items.length>0){
         res.json({"status":"email is already exit"})
      }
      else{
-        let user=new blogmodel(input)
-        user.save()
-        res.json({"status":"success"})
+        let result=new blogmodel(input)
+        result.save()
+        res.json({"status":"success done"})
      }
-    }).catch()
+    
+}
+).catch((error)=>{})
     
 })
 
