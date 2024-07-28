@@ -57,9 +57,9 @@ app.post("/create",async(req,res)=>
         if (decoded) {
             let result=new postmodel(input)
             await result.save()
-            res.json({"stutus":"stutus done"})
+            res.json({"status":"stutus done"})
         } else {
-            res.json({"stutus":"invalid auth"})
+            res.json({"status":"invalid auth"})
         }
     })
 })
